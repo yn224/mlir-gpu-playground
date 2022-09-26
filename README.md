@@ -79,3 +79,6 @@ The following are the execution times for different examples (matmul omitted due
 
 ## Debugging
 General errors encountered are being logged in `error-tracking.md`.
+
+## Upcoming examples
+Resnet example
