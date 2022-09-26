@@ -41,20 +41,21 @@ ninja tools/torch-mlir/all check-torch-mlir-all
 ```
 
 ## Execution time
-The following are the execution times for different examples (matmul omitted due to its simplicity)
-* Resnet18 - Pytorch flow
-  ```
-  TODO
-  ```
-* Resnet18 - Torchscript flow
-  * CPU
-    ```
-    TODO
-    ```
-  * GPU (in `brg-zhang-xcel` server @Conell)
-    ```
-    TODO
-    ```
+The following are the execution times for different examples (matmul omitted due to its simplicity).
+* Resnet18
+  | Unit: (s) | Pytorch Flow | Torchscript Flow |
+  |:----------|:------------:|:----------------:|
+  | Inference | 0.0004436969757080078 | 9.140702724456787 |
+  |   Test    | 0.04910922050476074   | 23.24636745452881 |
+
+  | Unit: (s) | Full MLIR |
+  |:----------|:---------:|
+  |    CPU    |  24.309   |
+  |    GPU    |  7.533    |
+
+* Ultranet - <mark>TODO</mark>
+
+_NOTE_ GPU is being run in `brg-zhang-xcel` server @Conell
 
 ## Compile and Run
 * Order (CPU):
@@ -76,9 +77,10 @@ The following are the execution times for different examples (matmul omitted due
     Unranked Memref base@ = 0x3c5ee20 rank = 1 offset = 0 sizes = [3] strides = [1] data =
     [70.6567,  4.98832,  4.47745]
     ```
+  * Ultranet
+    ```
+    TODO
+    ```
 
 ## Debugging
 General errors encountered are being logged in `error-tracking.md`.
-
-## Upcoming examples
-Resnet example
