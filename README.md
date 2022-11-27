@@ -4,13 +4,6 @@ Learning & experimenting with LLVM/MLIR/TorchMLIR to GPU
 ## LLVM Version
 Currently, LLVM15 is being used for implementing and testing.
 
-## GPU execution
-Script `run.sh` - adopted from [here](https://github.com/zzzDavid/mlir-playground/blob/main/gpu-backend/compile.sh)
-
-More detailed instruction can be found in respective directories
-* Simple examples: `matmul`
-* Machine Learning examples: `ml`
-
 ## TorchMLIR
 Tools & Versions:
 * cmake 3.24.0
@@ -40,6 +33,19 @@ cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
 ninja tools/torch-mlir/all check-torch-mlir-all
 ```
 
+## GPU execution
+Script `run.sh` - adopted from [here](https://github.com/zzzDavid/mlir-playground/blob/main/gpu-backend/compile.sh)
+
+## Examples
+* `matmul`: Simple examples (matmul only for now...)
+* `resnet18`: Resnet18 example provided by PyTorch
+* `centernet` (private): Centernet model
+* `reactnet` (private): Reactnet model
+* `skynet` (private): Skynet model
+* `squeezenet` (private): Squeezenet model
+* `ultranet` (private): Ultranet model
+* `yolo` (private): YOLO model
+
 ## Execution time
 The following are the execution times for different examples (matmul omitted due to its simplicity).
 * Resnet18 - using image given already in [here](https://github.com/llvm/torch-mlir/blob/main/examples/torchscript_resnet18.py#L62)
@@ -52,8 +58,6 @@ The following are the execution times for different examples (matmul omitted due
   |:----------|:---------:|
   |    CPU    |  24.309   |
   |    GPU    |  7.533    |
-
-* Ultranet - TODO
 
 _NOTE_: GPU is being run in `brg-zhang-xcel` server @Conell
 
