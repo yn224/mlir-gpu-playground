@@ -33,11 +33,8 @@ cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
 ninja tools/torch-mlir/all check-torch-mlir-all
 ```
 
-## GPU execution
-Script `run.sh` - adopted from [here](https://github.com/zzzDavid/mlir-playground/blob/main/gpu-backend/compile.sh)
-
 ## Examples
-* `matmul`: Simple examples (matmul only for now...)
+* `sample`: Sample program (matmul) to demonstrate TorchMLIR compiler
 * `resnet18`: Resnet18 example provided by PyTorch
 * `centernet` (private): Centernet model
 * `reactnet` (private): Reactnet model
@@ -61,30 +58,20 @@ The following are the execution times for different examples (matmul omitted due
 
 _NOTE_: GPU is being run in `brg-zhang-xcel` server @Conell
 
-## Compile and Run
-* Order (CPU):
-    1. Compile using `./run.sh <file> <number>`, where `<number> = 0` if `<file>` is matmul and `<number> = 1` if `<file>` is ML.
-    2. Run `./run.sh <file> 2` for CPU-runner.
-* Order (GPU):
-    1. Same first 2 steps as CPU.
-    2. Edit out `"exout.llvm"` contained in the line `.file 1 "$PWD" "exout.llvm"` of `exout.s` that gets generated.
-    3. Run `./run.sh <file> 3`
-* Expected results
-  * Matmul
-    ```
-    Unranked Memref base@ = 0x564c2792cb00 rank = 2 offset = 0 sizes = [2, 2] strides = [2, 1] data =
-    [[5,   5],
-    [9,   9]]
-    ```
-  * Resnet18
-    ```
-    Unranked Memref base@ = 0x3c5ee20 rank = 1 offset = 0 sizes = [3] strides = [1] data =
-    [70.6567,  4.98832,  4.47745]
-    ```
-  * Ultranet
-    ```
-    TODO
-    ```
+## Compile and Run on GPU
+To generate GPU code, the script `run.sh` - adopted from [here](https://github.com/zzzDavid/mlir-playground/blob/main/gpu-backend/compile.sh) - would be used.
+
+Given some `program.py` with `verbose=True` in `torch_mlir.compile`,
+1. Generate and save the generated IR by running `python3 program.py &> out.mlir`
+2. Remove `Torch Backend IR` and keep `Linalg Backend IR`.
+3. Apply the following passes to lower `tensor` dialect to `memref` dialect:
+```
+./build/bin/torch-mlir-opt --scf-bufferize --tm-tensor-bufferize --linalg-init-tensor-to-alloc-tensor --linalg-bufferize --func-bufferize --arith-bufferize --tensor-bufferize --finalizing-bufferize --tm-tensor-to-loops out.mlir &> out_lowered.mlir 
+```
+4. Further lower and generate assembly by running `./run.sh out_lowered.mlir 1`
+    * The numerical option of 2 makes it a CPU-runner.
+5. Edit out `"exout.llvm"` contained in the line `.file 1 "$PWD" "exout.llvm"` of `exout.s` that gets generated.
+6. Run `./run.sh out_lowered.mlir 3` to run the program on GPU.
 
 ## Debugging
 General errors encountered are being logged in `error-tracking.md`.

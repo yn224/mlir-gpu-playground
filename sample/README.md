@@ -1,9 +1,7 @@
-# TITLE
+# Sample TorchMLIR Compilation Process using Matmul
 `runnable_linalg.mlir` - result of lowering `linalg_tensor_backend_matmul.mlir` using passes shown above _without_ `refback-munge-calling-conventions`.
 
-Interestingly, lowering `linalg_tensor_backend_matmul.mlir` up to bufferization still makes it runnable.
-
-## Matmul
+## Stages
 1. Running `python3 torch_matmul.py` yields `raw_matmul.mlir`, which gets compiled down to `torch_backend_matmul.mlir` and `linalg_tensor_backend_matmul.mlir`.
 2. Apply [the pass chain](https://github.com/llvm/torch-mlir/blob/main/python/torch_mlir_e2e_test/linalg_on_tensors_backends/refbackend.py#L115-L153) on the file `linalg_tensor_backend_matmul.mlir`. Below are the IRs after each pass before converting to LLVM.
     <details>
